@@ -18,20 +18,27 @@ fun main() {
 		return
 	}
 
+	// サイズ変更
+	val resized = Mat()
+	Imgproc.resize(src, resized, Size(512.0, 512.0))
+	Imgcodecs.imwrite("round1.png", resized)
+
 	// グレースケール変換
 	val gray = Mat()
-	Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY)
-	Imgcodecs.imwrite("round1.png", gray)
+	Imgproc.cvtColor(resized, gray, Imgproc.COLOR_BGR2GRAY)
+	Imgcodecs.imwrite("round2.png", gray)
 
 	// Gaussianブラーを適用してノイズを低減
 	val blurred = Mat()
 	// 引数は(input, output, カーネルサイズ, 標準偏差)
+	// 省略してあるが、標準偏差(Y)や画像端をどう処理するかも指定可能
 	Imgproc.GaussianBlur(gray, blurred, Size(5.0, 5.0), 1.5)
-	Imgcodecs.imwrite("round2.png", blurred)
+	Imgcodecs.imwrite("round3.png", blurred)
 
 	// キャニー法によるエッジ検出
 	val edges = Mat()
 	// 引数は(input, output, 最小閾値, 最大閾値)
+	// 省略してあるが、ソベルフィルタのサイズや勾配計算の際の距離の扱いも指定可能
 	Imgproc.Canny(blurred, edges, 100.0, 200.0)
-	Imgcodecs.imwrite("round3.png", edges)
+	Imgcodecs.imwrite("round4.png", edges)
 }
